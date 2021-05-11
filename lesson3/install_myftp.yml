@@ -1,0 +1,5 @@
+---
+- name: Install FTP
+  hosts: all
+  roles:
+    - myftp 
