@@ -1,0 +1,17 @@
+---
+- name: Change boot options
+  hosts: all 
+  become: yes
+
+  tasks:
+  - name: Change boot line  
+    lineinfile:
+       state  : present
+       dest   : /etc/default/grub
+       regexp : 'console=ttyS0,115200n8 elevator=noop'
+       line   : GRUB_CMDLINE_LINUX="no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop" 
+    register  : ChangeGrubFile
+
+  - name: Rewrite grub file
+    shell: grub2-mkconfig
+    when: ChangeGrubFile.changed

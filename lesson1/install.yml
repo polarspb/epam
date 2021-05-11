@@ -1,0 +1,28 @@
+---
+- name: Install and Configure Apache
+  hosts: nodes 
+  become: yes
+
+  tasks:
+    - name: Install httpd service
+      yum: name=httpd state=latest
+
+    - name: Start httpd service
+      service: name=httpd state=started enabled=yes
+
+    - name: Check service status
+      service_facts:
+    - debug:
+        var: ansible_facts.services["httpd.service"].state
+
+    - name: Create index.html
+      template:
+        src: index.html.j2
+        dest: /var/www/html/index.html
+        mode: 0777
+
+    - name: Open 80 port
+      firewalld:
+        service: http
+        permanent: yes
+        state: enabled

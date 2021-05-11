@@ -1,0 +1,20 @@
+---
+- name: Remove Apache 
+  hosts: nodes 
+  become: yes
+
+  tasks:
+
+    - name: Delete index.html
+      file:
+        state: absent
+        path: /var/www/html/index.html
+
+    - name: Close 80 port
+      firewalld: 
+        service: http
+        permanent: yes
+        state: disabled
+
+    - name: Uninstall httpd 
+      yum: name=httpd state=absent
