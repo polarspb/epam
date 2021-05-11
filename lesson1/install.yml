@@ -21,8 +21,13 @@
         dest: /var/www/html/index.html
         mode: 0777
 
+    - name: Install firewalld
+      service: name=firewalld state=started enabled=yes
+
     - name: Open 80 port
       firewalld:
         service: http
         permanent: yes
         state: enabled
+        immediate: yes
+       
