@@ -24,7 +24,7 @@
     - name: Install firewalld
       yum: name=firewalld state=latest
 
-    - name: Start httpd service
+    - name: Start firewalld service
       service: name=firewalld state=started enabled=yes
    
     - name: Open 80 port
