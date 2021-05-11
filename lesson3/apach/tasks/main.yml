@@ -1,0 +1,34 @@
+---
+# tasks file for apach
+    - name: Install httpd service
+      yum: name=httpd state=latest
+
+    - name: Start httpd service
+      service: name=httpd state=started enabled=yes
+
+    - name: Check service status
+      service_facts:
+         
+    - debug:
+        var: "{{ state_of_svc }}"
+     
+    - name: Create index.html
+      template:
+        src: index.html.j2
+        dest: /var/www/html/index.html
+        mode: 0777
+      notify:
+        - Restart Apache
+
+    - name: Install firewalld
+      yum: name=firewalld state=latest
+
+    - name: Start firewalld service
+      service: name=firewalld state=started enabled=yes
+      
+    - name: Open 80 port
+      firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+        immediate: yes

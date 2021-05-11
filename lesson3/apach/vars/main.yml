@@ -1,0 +1,3 @@
+---
+# vars file for apach
+  state_of_svc: ansible_facts.services["httpd.service"].state
