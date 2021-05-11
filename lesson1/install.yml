@@ -22,8 +22,11 @@
         mode: 0777
 
     - name: Install firewalld
-      service: name=firewalld state=started enabled=yes
+      yum: name=firewalld state=latest
 
+    - name: Start httpd service
+      service: name=firewalld state=started enabled=yes
+   
     - name: Open 80 port
       firewalld:
         service: http

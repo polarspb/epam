@@ -16,5 +16,8 @@
         permanent: yes
         state: disabled
 
+    - name: UnInstall firewalld
+      yum: name=firewalld state=absent
+
     - name: Uninstall httpd 
       yum: name=httpd state=absent
