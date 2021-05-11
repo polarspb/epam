@@ -1,7 +1,7 @@
 ---
 - name: Change boot options
   hosts: all 
-  become: yes
+#  become: yes
 
   tasks:
   - name: Change boot line  

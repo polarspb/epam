@@ -1,7 +1,7 @@
 ---
 - name: Remove Apache 
   hosts: nodes 
-  become: yes
+#  become: yes
 
   tasks:
 
