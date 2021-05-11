@@ -1,4 +1,4 @@
-###Install Apache 
+### Install Apache 
 
 1. Install httpd
 2. Start httpd
@@ -9,6 +9,6 @@
 7. Open http ports
 
 
-###Remove Apache
+### Remove Apache
 
-###Change boot file Linux
+### Change boot file Linux

@@ -1,7 +1,7 @@
-##Create users
+## Create users
 
-###Need to create linux users with vault password and mail address
+### Need to create linux users with vault password and mail address
 
-####Execute
+#### Execute
 
 ansible-playbook users.yml
