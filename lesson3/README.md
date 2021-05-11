@@ -10,3 +10,11 @@
 #### 2. Напишите роль, которая устанавливает и включает FTP (пакет vsftpd), открывает необходимые порты. Определите в переменных необходимые параметры конфигурации ftp-сервера и используйте их в шаблоне для файла конфигурации vsftpd.conf:
     - разрешен анонимный доступ в папку /var/ftp/pub и аплоад файлов в папку /var/ftp/pub/upload;
     - настроены необходимые разрешения и соответствующий SELinux контекст: "ftpd_anon_write" boolean - значение "on" (edited).
+
+### Credentials
+
+username: root
+password: vagrant 
+
+username: ansible
+password: ansipass

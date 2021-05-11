@@ -12,3 +12,11 @@
 ### Remove Apache
 
 ### Change boot file Linux
+
+### Credentials
+
+username: root
+password: vagrant 
+
+username: ansible
+password: ansipass
