@@ -259,4 +259,17 @@ module "rds" {
 
 resource "aws_efs_file_system" "nfs" {
   creation_token = "nfs-ec2"
+  encrypted      = "false"
+}
+
+resource "aws_efs_mount_target" "nfs-mt-1" {
+  file_system_id  = "${aws_efs_file_system.nfs.id}"
+  subnet_id       = "${aws_subnet.pub-subnet-1.id}"
+  security_groups = ["${aws_security_group.sec-nfs.id}"]
+}
+
+resource "aws_efs_mount_target" "nfs-mt-2" {
+  file_system_id  = "${aws_efs_file_system.nfs.id}"
+  subnet_id       = "${aws_subnet.pub-subnet-2.id}"
+  security_groups = ["${aws_security_group.sec-nfs.id}"]
 }
