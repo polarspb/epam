@@ -1,8 +1,11 @@
 #!/bin/bash
 su
 apt -y update
+apt -y upgrade
+apt -y install nfs-common
 apt -y install apache2
-echo "Hi It's my Site from $(hostname -f)" > index.html
-cp index.html /var/www/html/index.html
-service apache2 start
-chkconfig apache2 on
+apt -y install wordpress
+apt -y remove wordpress
+wget https://wordpress.org/latest.tar.gz
+systemctl restart apache2
+systemctl enable apache2

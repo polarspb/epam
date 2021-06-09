@@ -66,17 +66,10 @@ resource "aws_route_table_association" "pub-route-table-2" {
   route_table_id = "${aws_route_table.pub-route-table.id}"
 }
 
-resource "aws_security_group" "sec-group" {
-  name        = "sec-group"
-  description = "HTTP SSH ICMP"
+resource "aws_security_group" "sec-ec2" {
+  name        = "sec-ec2"
+  description = "Allow SSH & HTTP"
   vpc_id      = "${aws_vpc.vpc.id}"
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
   ingress {
     from_port   = 22
@@ -86,9 +79,9 @@ resource "aws_security_group" "sec-group" {
   }
 
   ingress {
-    from_port   = -1
-    to_port     = -1
-    protocol    = "icmp"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -100,29 +93,76 @@ resource "aws_security_group" "sec-group" {
   }
 
   tags {
-    Name = "sec-group"
+    Name = "sec-ec2"
   }
 }
 
+resource "aws_security_group" "sec-sql" {
+  name        = "sec-sql"
+  description = "Allow SQL"
+  vpc_id      = "${aws_vpc.vpc.id}"
+
+  tags {
+    Name = "sec-sql"
+  }
+}
+
+resource "aws_security_group_rule" "sec-sql-in" {
+  type                     = "ingress"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
+  source_security_group_id = "${aws_security_group.sec-ec2.id}"
+  security_group_id        = "${aws_security_group.sec-sql.id}"
+}
+
+resource "aws_security_group_rule" "sec-sql-out" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.sec-sql.id}"
+}
+
+resource "aws_security_group" "sec-nfs" {
+  name        = "sec-nfs"
+  description = "Allow EFS"
+  vpc_id      = "${aws_vpc.vpc.id}"
+
+  tags {
+    Name = "sec-nfs"
+  }
+}
+
+resource "aws_security_group_rule" "sec-nfs-in" {
+  type                     = "ingress"
+  from_port                = 2049
+  to_port                  = 2049
+  protocol                 = "tcp"
+  source_security_group_id = "${aws_security_group.sec-ec2.id}"
+  security_group_id        = "${aws_security_group.sec-nfs.id}"
+}
+
+resource "aws_security_group_rule" "sec-nfs-out" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.sec-nfs.id}"
+}
+
 resource "aws_instance" "web-srv-1" {
-  ami           = "ami-00399ec92321828f5"
+  ami           = "${var.debian_ami_id}"
   instance_type = "t2.micro"
-  key_name      = "epamssh"
+  key_name      = "${var.ssh_key_id}"
 
   subnet_id = "${aws_subnet.pub-subnet-1.id}"
 
-  vpc_security_group_ids = ["${aws_security_group.sec-group.id}"]
+  vpc_security_group_ids = ["${aws_security_group.sec-ec2.id}"]
 
-  user_data = <<-EOF
-              #!/bin/bash
-              su
-              apt -y update
-              apt -y install apache2
-              echo "Hi It's my Site 1" > index.html
-              cp index.html /var/www/html/index.html
-              service apache2 start
-              chkconfig apache2 on
-              EOF
+  user_data = "${file("install_web.sh")}"
 
   tags = {
     Name  = "Web Server 1"
@@ -131,24 +171,15 @@ resource "aws_instance" "web-srv-1" {
 }
 
 resource "aws_instance" "web-srv-2" {
-  ami           = "ami-00399ec92321828f5"
+  ami           = "${var.debian_ami_id}"
   instance_type = "t2.micro"
-  key_name      = "epamssh"
+  key_name      = "${var.ssh_key_id}"
 
   subnet_id = "${aws_subnet.pub-subnet-2.id}"
 
-  vpc_security_group_ids = ["${aws_security_group.sec-group.id}"]
+  vpc_security_group_ids = ["${aws_security_group.sec-ec2.id}"]
 
-  user_data = <<-EOF
-              #!/bin/bash
-              su
-              apt -y update
-              apt -y install apache2
-              echo "Hi It's my Site 2" > index.html
-              cp index.html /var/www/html/index.html
-              service apache2 start
-              chkconfig apache2 on
-              EOF
+  user_data = "${file("install_web.sh")}"
 
   tags = {
     Name  = "Web Server 2"
@@ -190,7 +221,7 @@ resource "aws_lb" "app-lb" {
   internal                   = false
   load_balancer_type         = "application"
   subnets                    = ["${aws_subnet.pub-subnet-1.id}", "${aws_subnet.pub-subnet-2.id}"]
-  security_groups            = ["${aws_security_group.sec-group.id}"]
+  security_groups            = ["${aws_security_group.sec-ec2.id}"]
   enable_deletion_protection = false
 }
 
@@ -203,4 +234,29 @@ resource "aws_lb_listener" "list-alb" {
     type             = "forward"
     target_group_arn = "${aws_lb_target_group.alb-tg.arn}"
   }
+}
+
+module "rds" {
+  source                              = "terraform-aws-modules/rds/aws"
+  identifier                          = "wordpress"
+  engine                              = "mysql"
+  engine_version                      = "5.7.26"
+  instance_class                      = "db.t2.micro"
+  allocated_storage                   = 5
+  name                                = "wordpress"
+  username                            = "dbadmin"
+  password                            = "AdminPass"
+  port                                = "3306"
+  iam_database_authentication_enabled = true
+  vpc_security_group_ids              = ["${aws_security_group.sec-sql.id}"]
+  subnet_ids                          = ["${aws_subnet.pub-subnet-1.id}", "${aws_subnet.pub-subnet-2.id}"]
+  family                              = "mysql5.7"
+  major_engine_version                = "5.7"
+  version                             = "~> 1.37"
+  maintenance_window                  = "Mon:00:00-Mon:03:00"
+  backup_window                       = "03:00-06:00"
+}
+
+resource "aws_efs_file_system" "nfs" {
+  creation_token = "nfs-ec2"
 }
