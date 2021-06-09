@@ -6,6 +6,7 @@ apt -y install nfs-common
 apt -y install apache2
 apt -y install wordpress
 apt -y remove wordpress
-wget https://wordpress.org/latest.tar.gz
+wget https://raw.githubusercontent.com/polarspb/epam/main/terraform/conf_sys.sh
+chmod +x conf_sys.sh
 systemctl restart apache2
 systemctl enable apache2

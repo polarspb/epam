@@ -19,3 +19,5 @@ When services created you need:
 3. Run bash script "conf_first.sh" on the first instance
 4. Run bash script "conf_second.sh" on the second instance
 5. Configure Wordpress.
+
+P.S. Scripts located on the instance.
