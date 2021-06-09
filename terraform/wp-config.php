@@ -46,14 +46,14 @@ define( 'DB_COLLATE', '' );
  *
  * @since 2.6.0
  */
- define('AUTH_KEY',         's-Hp}ze+ImPpS3BKhmS)azy%%%TUaj1@UR ;A9&-mv5[ei$V@3b?Wfp|s8!2{62J');
- define('SECURE_AUTH_KEY',  'l1a=_zf,sz@!tE1|PR;[+ hAg8/dJ+v<rt.pVB{nm <D|MZ#Q7t0vJCqse)3O;C$');
- define('LOGGED_IN_KEY',    'A$}]S=-,*?eA?[,+RhM6L,Ja.(l%+H`2pUxW(R&glpH`uk.~P;ASaB8f@nWd(+8J');
- define('NONCE_KEY',        'S3d+mePZDgzqz|f$[2&0p@$@z,dq8rX4pBw$Z5A]Z--| +B]zL&|Hb-+kxUO8|yH');
- define('AUTH_SALT',        '%IH%/*{RgXmuMGQV|gilY>#V3}k3L|~~N|s(8=UB0CLcm5)CE.N&+n1 vSY+N(6s');
- define('SECURE_AUTH_SALT', 'r=&uad|OqyK3&q&-|szyE5:<y]8ip7/lItn-b8(~Gqp15aD+ .f$RY6= /4L-(^[');
- define('LOGGED_IN_SALT',   'UJ:<yFjh}?|E4/DaxHgJb,D6?~Q(3,H[e=x+|_1]?J7pQE@pO e5B^^:Kr``JkVQ');
- define('NONCE_SALT',       '2s:1=c/dgu%sLovhq>9iToq Jwf<,e{|$+8n@UKbqh{gYT3h1,hn+$oD^; A`(|#');
+ define('AUTH_KEY',         'myuniquepfrasethere');
+ define('SECURE_AUTH_KEY',  'myuniquepfrasethere');
+ define('LOGGED_IN_KEY',    'myuniquepfrasethere');
+ define('NONCE_KEY',        'myuniquepfrasethere');
+ define('AUTH_SALT',        'myuniquepfrasethere');
+ define('SECURE_AUTH_SALT', 'myuniquepfrasethere');
+ define('LOGGED_IN_SALT',   'myuniquepfrasethere');
+ define('NONCE_SALT',       'myuniquepfrasethere');
 
 /**#@-*/
 
