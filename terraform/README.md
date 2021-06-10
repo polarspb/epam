@@ -15,9 +15,10 @@ This task create:
 When services created you need:
 
 1. Find in AWS console RDS MySQL name & EFS name
-2. Connect to one of the instance
-3. Run bash script "conf_first.sh" on the first instance
-4. Run bash script "conf_second.sh" on the second instance
-5. Configure Wordpress.
-
-P.S. Scripts located on the instance.
+2. Connect to the instance 1
+3. sudo wget https://raw.githubusercontent.com/polarspb/epam/main/terraform/instance1.sh
+4. chmod +x instance1.sh & run script
+5. Connect to the instance 2
+6. sudo wget https://raw.githubusercontent.com/polarspb/epam/main/terraform/instance2.sh
+7. chmod +x instance2.sh & run script
+8. Configure Wordpress.
