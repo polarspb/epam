@@ -21,4 +21,5 @@ When services created you need:
 5. Connect to the instance 2
 6. sudo wget https://raw.githubusercontent.com/polarspb/epam/main/terraform/instance2.sh
 7. chmod +x instance2.sh & run script
-8. Configure Wordpress.
+8. Connect to the ALB from browser
+9. Configure Wordpress.
