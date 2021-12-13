@@ -113,30 +113,6 @@ resource "aws_security_group" "epam-sg-web" {
   tags = { Name = "epam-sg-web" }
 }
 
-# resource "aws_security_group" "epam-sg-eks" {
-#   name        = "epam-sg-eks"
-#   description = "Allow EKS traffic"
-#   vpc_id      = aws_vpc.epam-vpc.id
-
-#   dynamic "ingress" {
-#     for_each = ["22", "80", "443", "8080"]
-#     content {
-#       from_port   = ingress.value
-#       to_port     = ingress.value
-#       protocol    = "tcp"
-#       cidr_blocks = ["0.0.0.0/0"]
-#     }
-#   }
-#   egress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-#   tags = { Name = "epam-sg-eks" }
-#   #tags = merge(var.common-tags, { Name = "${var.common-tags["Environment"]} Dynamic Security Group" })
-# }
-
 # # ----- DB security -----
 resource "aws_security_group" "epam-sg-db" {
   name        = "epam-sg-db"
@@ -155,15 +131,6 @@ resource "aws_security_group_rule" "epam-sg-db-in" {
   security_group_id        = aws_security_group.epam-sg-db.id
 }
 
-# resource "aws_security_group_rule" "epam-sg-db-in-eks" {
-#   type                     = "ingress"
-#   from_port                = 3306
-#   to_port                  = 3306
-#   protocol                 = "tcp"
-#   source_security_group_id = aws_security_group.epam-sg-eks.id
-#   security_group_id        = aws_security_group.epam-sg-db.id
-# }
-
 resource "aws_security_group_rule" "epam-sg-db-out" {
   type              = "egress"
   from_port         = 0
@@ -174,16 +141,6 @@ resource "aws_security_group_rule" "epam-sg-db-out" {
 }
 
 # ----- EC2 Instances -----
-
-# resource "aws_instance" "epam-control" {
-#   ami                    = data.aws_ami.latest-amazon2.id
-#   instance_type          = "t2.micro"
-#   subnet_id              = aws_subnet.epam-pub-net-1.id
-#   vpc_security_group_ids = [aws_security_group.epam-sg-web.id]
-#   # key_name               = aws_key_pair.generated_key.key_name
-#   tags = { Name = "epam-control" }
-#   # tags = merge(var.common-tags, { Name = "${var.common-tags["Environment"]} Control Server" })
-# }
 
 resource "aws_instance" "epam-jenkins" {
   ami                    = data.aws_ami.latest-amazon2.id
