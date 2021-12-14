@@ -1,0 +1,10 @@
+version: '2'
+services:
+  db:
+    image: 'mysql'
+    restart: always
+    
+    expose:
+      - '3306'
+    ports:
+      - '3306:3306'
